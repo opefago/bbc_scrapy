@@ -84,19 +84,23 @@ def fetch_header(driver, link_text):
     return heading
 
 
-if __name__ == '__main__':
-    ser = Service("./chromedriver")
-    driver = webdriver.Chrome(options=chrome_options, service=ser)
-    workbook = xlsxwriter.Workbook('BBC_Frontpage_links.xlsx')
-    worksheet = workbook.add_worksheet()
-    links = get_links(driver, url, "//a[@class='block-link__overlay-link']")
+def save_to_file(links):
     row = 0
     column = 0
-
+    workbook = xlsxwriter.Workbook('BBC_Frontpage_links.xlsx')
+    worksheet = workbook.add_worksheet()
     for link in links:
         worksheet.write(row, column, link[0])
         row += 1
     workbook.close()
+
+
+if __name__ == '__main__':
+    ser = Service("./chromedriver")
+    driver = webdriver.Chrome(options=chrome_options, service=ser)
+
+    links = get_links(driver, url, "//a[@class='block-link__overlay-link']")
+    save_to_file(links)
 
     for link in links:
         scrape(driver, *link)
